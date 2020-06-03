@@ -13,9 +13,9 @@ TARGET_ARCH="v850-elf"
 export MAKEFLAGS='-j1' # todo: MAKEFLAGS='-j$(nproc)'
 export PATH=$PATH:${TOOLCHAIN_PATH}/bin
 
-DOWNLOAD_PATH="${PWD}/tmp-build/${TOOLCHAIN_NAME}/download"
-SOURCES_PATH="${PWD}/tmp-build/${TOOLCHAIN_NAME}/sources"
-BUILD_PATH="${PWD}/tmp-build/${TOOLCHAIN_NAME}/build"
+DOWNLOAD_PATH="/tmp/${TOOLCHAIN_NAME}/download"
+SOURCES_PATH="/tmp/${TOOLCHAIN_NAME}/sources"
+BUILD_PATH="/tmp/${TOOLCHAIN_NAME}/build"
 
 # prepare install path
 sudo mkdir -p ${TOOLCHAIN_PATH}
