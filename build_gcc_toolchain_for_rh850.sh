@@ -10,7 +10,8 @@ TOOLCHAIN_PATH="/opt/${TOOLCHAIN_NAME}"
 HOST_ARCH="x86_64-pc-linux-gnu"
 TARGET_ARCH="v850-elf"
 
-export MAKEFLAGS='-j1' # todo: MAKEFLAGS='-j$(nproc)'
+#export NUMJOBS="-j4"
+export NUMJOBS="-j$(nproc)"
 export PATH=$PATH:${TOOLCHAIN_PATH}/bin
 
 DOWNLOAD_PATH="/tmp/${TOOLCHAIN_NAME}/download"
@@ -63,7 +64,7 @@ ${SOURCES_PATH}/binutils-2.34/configure \
 --disable-nls \
 -v 2>&1 | tee configure.out
 
-make -w 2>&1 | tee make.out
+make -w ${NUMJOBS} 2>&1 | tee make.out
 make -w install 2>&1 | tee make.out
 
 
@@ -82,7 +83,7 @@ ${SOURCES_PATH}/gcc-9.3.0/configure \
 --disable-nls \
 -v 2>&1 | tee configure.out
 
-make -w all-gcc 2>&1 | tee make.out
+make -w ${NUMJOBS} all-gcc 2>&1 | tee make.out
 make -w install-gcc 2>&1 | tee make.out
 
 
@@ -96,7 +97,7 @@ ${SOURCES_PATH}/newlib-3.3.0/configure \
 --disable-nls \
 -v 2>&1 | tee configure.out
 
-make -w 2>&1 | tee make.out
+make -w ${NUMJOBS} 2>&1 | tee make.out
 make -w install 2>&1 | tee make.out
 
 
@@ -116,7 +117,7 @@ ${SOURCES_PATH}/gcc-9.3.0/configure \
 --disable-nls \
 -v 2>&1 | tee configure.out
 
-make -w 2>&1 | tee make.out
+make -w ${NUMJOBS} 2>&1 | tee make.out
 make -w install 2>&1 | tee make.out
 
 
@@ -130,7 +131,7 @@ ${SOURCES_PATH}/gdb-9.1/configure \
 --disable-nls \
 -v 2>&1 | tee configure.out
 
-make -w 2>&1 | tee make.out
+make -w ${NUMJOBS} 2>&1 | tee make.out
 make -w install 2>&1 | tee make.out
 
 
