@@ -3,15 +3,13 @@
 set -e
 set -o pipefail
 
-sudo apt install make m4 binutils coreutils gcc g++ texinfo texlive
+sudo apt-get -y install make m4 binutils coreutils gcc g++ texinfo texlive
 
 TOOLCHAIN_NAME="rh850-hkp-none-eabi"
 TOOLCHAIN_PATH="/opt/${TOOLCHAIN_NAME}"
-HOST_ARCH="x86_64-pc-linux-gnu"
 TARGET_ARCH="v850-elf"
 
-#export NUMJOBS="-j4"
-export NUMJOBS="-j$(nproc)"
+NUMJOBS="-j$(nproc)"
 export PATH=$PATH:${TOOLCHAIN_PATH}/bin
 
 DOWNLOAD_PATH="/tmp/${TOOLCHAIN_NAME}/download"
@@ -32,33 +30,39 @@ rm -rf ${DOWNLOAD_PATH:?}/*
 rm -rf ${SOURCES_PATH:?}/*
 rm -rf ${BUILD_PATH:?}/*
 
+# software versions
+BINUTILS_VERSION="2.34"
+GCC_VERSION="9.3.0"
+GMP_VERSION="6.2.0"
+MPC_VERSION="1.1.0"
+MPFR_VERSION="4.0.2"
+NEWLIB_VERSION="3.3.0"
+GDB_VERSION="9.1"
+
 # download sources
-wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/binutils/binutils-2.34.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gcc/gcc-9.3.0/gcc-9.3.0.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://gmplib.org/download/gmp/gmp-6.2.0.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://sourceware.org/pub/newlib/newlib-3.3.0.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gdb/gdb-9.1.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://www.mpfr.org/mpfr-current/mpfr-${MPFR_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} ftp://sourceware.org/pub/newlib/newlib-${NEWLIB_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VERSION}.tar.gz
 
-tar zxvf ${DOWNLOAD_PATH}/binutils-2.34.tar.gz -C ${SOURCES_PATH}
-tar zxvf ${DOWNLOAD_PATH}/gcc-9.3.0.tar.gz -C ${SOURCES_PATH}
-tar zxvf ${DOWNLOAD_PATH}/gmp-6.2.0.tar.gz -C ${SOURCES_PATH}
-tar zxvf ${DOWNLOAD_PATH}/mpc-1.1.0.tar.gz -C ${SOURCES_PATH}
-tar zxvf ${DOWNLOAD_PATH}/mpfr-4.0.2.tar.gz -C ${SOURCES_PATH}
-tar zxvf ${DOWNLOAD_PATH}/newlib-3.3.0.tar.gz -C ${SOURCES_PATH}
-tar zxvf ${DOWNLOAD_PATH}/gdb-9.1.tar.gz -C ${SOURCES_PATH}
+for f in ${DOWNLOAD_PATH}/*.tar.gz
+do
+    tar xf "$f" -C ${SOURCES_PATH}
+done
 
-(cd ${SOURCES_PATH}/gcc-9.3.0/ && ln -s ../gmp-6.2.0 gmp)
-(cd ${SOURCES_PATH}/gcc-9.3.0/ && ln -s ../mpc-1.1.0 mpc)
-(cd ${SOURCES_PATH}/gcc-9.3.0/ && ln -s ../mpfr-4.0.2 mpfr)
+(cd ${SOURCES_PATH}/gcc-${GCC_VERSION}/ && ln -sf ../gmp-${GMP_VERSION} gmp)
+(cd ${SOURCES_PATH}/gcc-${GCC_VERSION}/ && ln -sf ../mpc-${MPC_VERSION} mpc)
+(cd ${SOURCES_PATH}/gcc-${GCC_VERSION}/ && ln -sf ../mpfr-${MPFR_VERSION} mpfr)
 
 
 # build binutils
 mkdir -p ${BUILD_PATH}/binutils
 cd ${BUILD_PATH}/binutils
 
-${SOURCES_PATH}/binutils-2.34/configure \
+${SOURCES_PATH}/binutils-${BINUTILS_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
 --disable-nls \
@@ -72,7 +76,7 @@ make -w install 2>&1 | tee make.out
 mkdir -p ${BUILD_PATH}/gcc
 cd ${BUILD_PATH}/gcc
 
-${SOURCES_PATH}/gcc-9.3.0/configure \
+${SOURCES_PATH}/gcc-${GCC_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
 --enable-languages=c \
@@ -91,7 +95,7 @@ make -w install-gcc 2>&1 | tee make.out
 mkdir -p ${BUILD_PATH}/newlib
 cd ${BUILD_PATH}/newlib
 
-${SOURCES_PATH}/newlib-3.3.0/configure \
+${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
 --disable-nls \
@@ -103,7 +107,7 @@ make -w install 2>&1 | tee make.out
 
 # build gcc - 2nd pass
 cd ${BUILD_PATH}/gcc
-${SOURCES_PATH}/gcc-9.3.0/configure \
+${SOURCES_PATH}/gcc-${GCC_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
 --enable-languages=c,c++ \
@@ -125,7 +129,7 @@ make -w install 2>&1 | tee make.out
 mkdir -p ${BUILD_PATH}/gdb
 cd ${BUILD_PATH}/gdb
 
-${SOURCES_PATH}/gdb-9.1/configure \
+${SOURCES_PATH}/gdb-${GDB_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
 --disable-nls \
@@ -158,7 +162,7 @@ int main() {
     for(auto i: test_array)
         test_vec.push_back(i);
     double value = get_value();
-    return 0; 
+    return 0;
 }
 " > ${BUILD_PATH}/rh850_test.cpp
 v850-elf-g++ -mv850e3v5 -mloop -mrh850-abi --std=c++14 ${BUILD_PATH}/rh850_test.cpp -o ${BUILD_PATH}/rh850_test_cpp.elf
