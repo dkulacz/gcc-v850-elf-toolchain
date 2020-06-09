@@ -52,7 +52,8 @@ RUN mkdir -p ${SOURCES_PATH} && \
 RUN cd ${SOURCES_PATH}/gcc-${GCC_VERSION} && \
     ln -s ../gmp-${GMP_VERSION} gmp && \
     ln -s ../mpc-${MPC_VERSION} mpc && \
-    ln -s ../mpfr-${MPFR_VERSION} mpfr
+    ln -s ../mpfr-${MPFR_VERSION} mpfr && \
+    ln -s ../newlib-${NEWLIB_VERSION}/newlib .
 
 # build binutils
 RUN mkdir -p ${BUILD_PATH}/binutils && \
@@ -65,7 +66,14 @@ RUN mkdir -p ${BUILD_PATH}/binutils && \
     make -j$(nproc) all && \
     make install
 
-ENV GCC_OPTS=" \
+
+# build gcc
+RUN mkdir -p ${BUILD_PATH}/gcc && \
+    cd ${BUILD_PATH}/gcc && \
+    ${SOURCES_PATH}/gcc-${GCC_VERSION}/configure \
+        --target=${TARGET_ARCH} \
+        --prefix=${TOOLCHAIN_PATH} \
+        --enable-languages=c,c++ \
         --with-gnu-as \
         --with-gnu-ld \
         --disable-shared \
@@ -73,46 +81,13 @@ ENV GCC_OPTS=" \
         --disable-threads \
         --disable-nls \
         --with-newlib \
-    "
-
-# build gcc - 1st pass
-RUN mkdir -p ${BUILD_PATH}/gcc && \
-    cd ${BUILD_PATH}/gcc && \
-    ${SOURCES_PATH}/gcc-${GCC_VERSION}/configure \
-        --target=${TARGET_ARCH} \
-        --prefix=${TOOLCHAIN_PATH} \
-        --enable-languages=c \
-        --without-headers \
-        ${GCC_OPTS} \
-    && \
-    make -j$(nproc) all-gcc && \
-    make install-gcc
-
-# build newlib
-RUN mkdir -p ${BUILD_PATH}/newlib && \
-    cd ${BUILD_PATH}/newlib && \
-    ${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
-        --target=${TARGET_ARCH} \
-        --prefix=${TOOLCHAIN_PATH} \
-        --disable-nls \
-    && \
-    make -j$(nproc) all && \
-    make install
-
-# build gcc - 2nd pass
-RUN cd ${BUILD_PATH}/gcc && \
-    ${SOURCES_PATH}/gcc-${GCC_VERSION}/configure \
-        --target=${TARGET_ARCH} \
-        --prefix=${TOOLCHAIN_PATH} \
-        --enable-languages=c,c++ \
-        ${GCC_OPTS} \
     && \
     make -j$(nproc) all && \
     make install-strip
 
 # build gdb
 RUN mkdir -p ${BUILD_PATH}/gdb && \
-    cd ${BUILD_PATH}/gdb &&\
+    cd ${BUILD_PATH}/gdb && \
     ${SOURCES_PATH}/gdb-${GDB_VERSION}/configure \
         --target=${TARGET_ARCH} \
         --prefix=${TOOLCHAIN_PATH} \
