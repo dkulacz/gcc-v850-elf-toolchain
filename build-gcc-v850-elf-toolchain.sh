@@ -32,12 +32,12 @@ rm -rf ${BUILD_PATH:?}/*
 
 # software versions
 BINUTILS_VERSION="2.34"
-GCC_VERSION="9.3.0"
+GCC_VERSION="10.2.0"
 GMP_VERSION="6.2.0"
 MPC_VERSION="1.1.0"
 MPFR_VERSION="4.0.2"
 NEWLIB_VERSION="3.3.0"
-GDB_VERSION="9.1"
+GDB_VERSION="9.2"
 
 # download sources
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VERSION}.tar.gz
