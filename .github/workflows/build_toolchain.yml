@@ -25,8 +25,36 @@ jobs:
     # Runs a single command using the runners shell
     - name: Run a one-line script
       run: ./build-gcc-v850-elf-toolchain.sh
-      
+
     - uses: actions/upload-artifact@v2
       with:
         name: opt-gcc-v850-elf-master
         path: /opt/gcc-v850-elf-master
+
+  build-docker:
+    name: "Build and Publish to Docker Hub. Extract toolchain and archive it."
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/build-push-action@v1
+        with:
+          username: dkulacz
+          password: ${{ secrets.dkulacz_dockerhub }}
+          repository: dkulacz/gcc-v850-elf-toolchain
+          cache_froms: dkulacz/gcc-v850-elf-toolchain:latest
+          build_args: UBUNTU_VERSION=18.04
+          tag_with_ref: true
+
+      - name: Extract toolchain
+        run: |
+          docker create --name $IMG_NAME dkulacz/gcc-v850-elf-toolchain:latest
+          docker cp $IMG_NAME:/opt/gcc-v850-elf-master /tmp
+          docker rm -f $IMG_NAME
+          tar -zcvf gcc-v850-elf-master-toolchain.tar.gz -C /tmp gcc-v850-elf-master
+        env:
+          IMG_NAME: toolchain_extract
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: gcc-v850-elf-master-toolchain.tar.gz
+          path: ~/gcc-v850-elf-master-toolchain.tar.gz
