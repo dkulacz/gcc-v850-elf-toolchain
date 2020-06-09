@@ -71,11 +71,10 @@ cd ${BUILD_PATH}/binutils
 ${SOURCES_PATH}/binutils-${BINUTILS_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
---disable-nls \
--v 2>&1 | tee configure.out
+--disable-nls
 
-make -w ${NUMJOBS} 2>&1 | tee make.out
-make -w install 2>&1 | tee make.out
+make ${NUMJOBS}
+make install
 
 
 # build gcc - 1st pass
@@ -90,11 +89,10 @@ ${SOURCES_PATH}/gcc-${GCC_VERSION}/configure \
 --with-gnu-as \
 --with-gnu-ld \
 --with-newlib \
---disable-nls \
--v 2>&1 | tee configure.out
+--disable-nls
 
-make -w ${NUMJOBS} all-gcc 2>&1 | tee make.out
-make -w install-gcc 2>&1 | tee make.out
+make ${NUMJOBS} all-gcc
+make install-gcc
 
 
 # build newlib
@@ -106,11 +104,10 @@ ${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
 --enable-newlib-nano-formatted-io \
---disable-nls \
--v 2>&1 | tee configure.out
+--disable-nls
 
-make -w ${NUMJOBS} 2>&1 | tee make.out
-make -w install 2>&1 | tee make.out
+make ${NUMJOBS}
+make install
 
 
 # build gcc - 2nd pass
@@ -126,11 +123,10 @@ ${SOURCES_PATH}/gcc-${GCC_VERSION}/configure \
 --disable-libssp \
 --disable-threads \
 --disable-shared \
---disable-nls \
--v 2>&1 | tee configure.out
+--disable-nls
 
-make -w ${NUMJOBS} 2>&1 | tee make.out
-make -w install 2>&1 | tee make.out
+make ${NUMJOBS}
+make install
 
 
 # build gdb
@@ -140,11 +136,10 @@ cd ${BUILD_PATH}/gdb
 ${SOURCES_PATH}/gdb-${GDB_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
---disable-nls \
--v 2>&1 | tee configure.out
+--disable-nls
 
-make -w ${NUMJOBS} 2>&1 | tee make.out
-make -w install 2>&1 | tee make.out
+make ${NUMJOBS}
+make install
 
 
 # run test compilation - C
