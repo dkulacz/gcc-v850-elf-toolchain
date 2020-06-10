@@ -5,7 +5,7 @@ set -o pipefail
 
 sudo apt-get -y install make m4 binutils coreutils gcc g++ texinfo texlive
 
-TOOLCHAIN_NAME="rh850-hkp-none-eabi"
+TOOLCHAIN_NAME="gcc-v850-elf-master"
 TOOLCHAIN_PATH="/opt/${TOOLCHAIN_NAME}"
 TARGET_ARCH="v850-elf"
 

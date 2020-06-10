@@ -1,2 +1,2 @@
-# rh850_gcc_toolchain
-GCC-based toolchain for RH850
+# gcc-v850-elf-toolchain
+GCC-based toolchain for V850/RH850
