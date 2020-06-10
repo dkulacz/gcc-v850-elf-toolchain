@@ -28,5 +28,5 @@ jobs:
       
     - uses: actions/upload-artifact@v2
       with:
-        name: opt-rh850_hkp_none_eabi
-        path: /opt/rh850-hkp-none-eabi
+        name: opt-gcc-v850-elf-master
+        path: /opt/gcc-v850-elf-master
