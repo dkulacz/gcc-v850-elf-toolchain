@@ -50,11 +50,30 @@ jobs:
           docker create --name $IMG_NAME dkulacz/gcc-v850-elf-toolchain:latest
           docker cp $IMG_NAME:/opt/gcc-v850-elf-master /tmp
           docker rm -f $IMG_NAME
-          tar -zcvf gcc-v850-elf-master-toolchain.tar.gz -C /tmp gcc-v850-elf-master
+          tar -zcvf gcc-v850-elf-toolchain-docker.tar.gz -C /tmp gcc-v850-elf-master
         env:
           IMG_NAME: toolchain_extract
 
       - uses: actions/upload-artifact@v2
         with:
-          name: gcc-v850-elf-master-toolchain.tar.gz
-          path: ~/gcc-v850-elf-master-toolchain.tar.gz
+          name: gcc-v850-elf-toolchain-docker.tar.gz
+          path: ~/gcc-v850-elf-toolchain-docker.tar.gz
+
+  test:
+    name: "Get toolchain and test if it works"
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: gcc-v850-elf-toolchain-docker.tar.gz
+          path: /tmp/gcc-v850-elf-toolchain-docker.tar.gz
+      -name: Extract toolchain
+        run: tar -xf /tmp/gcc-v850-elf-toolchain-docker.tar.gz -C /opt
+      -name: Install tools
+        run: apt-get update && apt-get -y install make cmake
+      -name: Test
+        run: |
+          export PATH=/opt/gcc-v850-elf-master/bin:${PATH}
+          cd test
+          ./test_rh850.sh
