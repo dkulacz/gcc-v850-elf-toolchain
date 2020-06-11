@@ -26,10 +26,8 @@ jobs:
     - name: Download and build toolchain
       run: ./build-gcc-v850-elf-toolchain.sh
       
-    - name: Package it as tar.gz to preserve permissions
-      run: tar -czvf gcc-v850-elf-toolchain.tar.gz /opt/gcc-v850-elf-master
-      
+    # Archive as tar.gz to keep permissions
     - uses: actions/upload-artifact@v2
       with:
         name: gcc-v850-elf-toolchain.tar.gz
-        path: gcc-v850-elf-toolchain.tar.gz
+        path: /opt/gcc-v850-elf-master
