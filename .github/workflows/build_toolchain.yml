@@ -25,10 +25,9 @@ jobs:
     # Runs a single command using the runners shell
     - name: Download and build toolchain
       run: ./build-gcc-v850-elf-toolchain.sh
-      
 
     - name: Package it as tar.gz to preserve permissions
-      run: tar -czvf gcc-v850-elf-toolchain.tar.gz /opt/gcc-v850-elf-master	
+      run: tar -czvf gcc-v850-elf-toolchain.tar.gz /opt/gcc-v850-elf-master
 
     - uses: actions/upload-artifact@v2
       with:

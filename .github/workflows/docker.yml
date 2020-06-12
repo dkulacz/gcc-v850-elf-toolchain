@@ -1,0 +1,72 @@
+name: Dockerized toolchain
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  TOOLCHAIN_NAME: gcc-v850-elf-toolchain
+  DOCKER_IMAGE: dkulacz/gcc-v850-elf-toolchain
+
+jobs:
+  build-docker:
+    name: "Build and Publish to Docker Hub. Extract toolchain and archive it."
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/build-push-action@v1
+        with:
+          username: dkulacz
+          password: ${{ secrets.dkulacz_dockerhub }}
+          repository: ${{ env.DOCKER_IMAGE }}
+          build_args: UBUNTU_VERSION=20.04
+          tag_with_ref: true
+          tags: ${{ github.sha }}
+
+      - name: Extract toolchain
+        run: |
+          docker create --name ${IMG_NAME} ${DOCKER_IMAGE}:${GITHUB_SHA}
+          docker cp ${IMG_NAME}:/opt/gcc-v850-elf-master /tmp
+          docker rm -f ${IMG_NAME}
+          tar -czvf ${TOOLCHAIN_NAME}-x86_64-linux.tar.gz -C /tmp gcc-v850-elf-master
+        env:
+          IMG_NAME: toolchain_extract
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.TOOLCHAIN_NAME }}-x86_64-linux.tar.gz
+          path: ${{ env.TOOLCHAIN_NAME }}-x86_64-linux.tar.gz
+
+  test-archive:
+    name: Test archived toolchain
+    needs: build-docker
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.TOOLCHAIN_NAME }}-x86_64-linux.tar.gz
+          path: /tmp/
+      - name: Extract toolchain
+        run: tar -xf /tmp/${TOOLCHAIN_NAME}-x86_64-linux.tar.gz -C /opt
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get -y install make cmake
+      - name: Test
+        run: |
+          export PATH=/opt/gcc-v850-elf-master/bin:${PATH}
+          cd test
+          ./test_rh850.sh
+
+  test-docker:
+    name: Test toolchain Docker image
+    needs: build-docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get updated docker image
+        run: docker pull ${DOCKER_IMAGE}:${GITHUB_SHA}
+      - name: Test
+        run: |
+          docker run --rm --volume $(pwd):$(pwd) -w $(pwd) ${DOCKER_IMAGE}:${GITHUB_SHA} /bin/bash -c "cd test && ./test_rh850.sh"
