@@ -14,6 +14,7 @@ on:
 env:
   TOOLCHAIN_NAME: gcc-v850-elf-toolchain
   DOCKER_IMAGE: dkulacz/gcc-v850-elf-toolchain
+  DOCKER_TAG: test-${{ github.sha }}
 
 jobs:
   build-docker:
@@ -28,11 +29,11 @@ jobs:
           repository: ${{ env.DOCKER_IMAGE }}
           build_args: UBUNTU_VERSION=18.04
           tag_with_ref: true
-          tags: ${{ github.sha }}
+          tags: ${{ env.DOCKER_TAG }}
 
       - name: Extract toolchain
         run: |
-          docker create --name ${IMG_NAME} ${DOCKER_IMAGE}:${GITHUB_SHA}
+          docker create --name ${IMG_NAME} ${DOCKER_IMAGE}:${DOCKER_TAG}
           docker cp ${IMG_NAME}:/opt/gcc-v850-elf-master /tmp
           docker rm -f ${IMG_NAME}
           tar -czvf ${TOOLCHAIN_NAME}-x86_64-linux.tar.gz -C /tmp gcc-v850-elf-master
@@ -71,7 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Get updated docker image
-        run: docker pull ${DOCKER_IMAGE}:${GITHUB_SHA}
+        run: docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
       - name: Test
         run: |
-          docker run --rm --volume $(pwd):$(pwd) -w $(pwd) ${DOCKER_IMAGE}:${GITHUB_SHA} /bin/bash -c "cd test && ./test_rh850.sh"
+          docker run --rm --volume $(pwd):$(pwd) -w $(pwd) ${DOCKER_IMAGE}:${DOCKER_TAG} /bin/bash -c "cd test && ./test_rh850.sh"
