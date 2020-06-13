@@ -2,9 +2,14 @@ name: Dockerized toolchain
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - 'docker/**'
+    tags:
+      - '**'
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 env:
   TOOLCHAIN_NAME: gcc-v850-elf-toolchain
