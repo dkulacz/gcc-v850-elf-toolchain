@@ -18,7 +18,7 @@ env:
 jobs:
   build-docker:
     name: "Build and Publish to Docker Hub. Extract toolchain and archive it."
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: docker/build-push-action@v1
@@ -26,7 +26,7 @@ jobs:
           username: dkulacz
           password: ${{ secrets.dkulacz_dockerhub }}
           repository: ${{ env.DOCKER_IMAGE }}
-          build_args: UBUNTU_VERSION=20.04
+          build_args: UBUNTU_VERSION=18.04
           tag_with_ref: true
           tags: ${{ github.sha }}
 
@@ -47,7 +47,7 @@ jobs:
   test-archive:
     name: Test archived toolchain
     needs: build-docker
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
