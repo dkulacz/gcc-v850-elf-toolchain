@@ -126,13 +126,23 @@ FROM ubuntu:$UBUNTU_VERSION AS toolchain
 
 ARG TOOLCHAIN_PATH
 
+COPY --from=build ${TOOLCHAIN_PATH} ${TOOLCHAIN_PATH}
+ENV PATH="${TOOLCHAIN_PATH}/bin:${PATH}"
+
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update && \
+    apt-get -y install --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
+        software-properties-common \
+        wget \
+    && \
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add - && \
+    apt-add-repository -n 'https://apt.kitware.com/ubuntu/' && \
+    apt-get -y update && \
     apt-get -y install --no-install-recommends \
         build-essential \
         cmake \
         ninja-build \
     && rm -rf /var/lib/apt/lists/*
-
-COPY --from=build ${TOOLCHAIN_PATH} ${TOOLCHAIN_PATH}
-ENV PATH="${TOOLCHAIN_PATH}/bin:${PATH}"
