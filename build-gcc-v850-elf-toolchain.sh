@@ -44,7 +44,7 @@ wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.gz
 wget -c -P ${DOWNLOAD_PATH} https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.gz
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VERSION}.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://www.mpfr.org/mpfr-current/mpfr-${MPFR_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz
 wget -c -P ${DOWNLOAD_PATH} ftp://sourceware.org/pub/newlib/newlib-${NEWLIB_VERSION}.tar.gz
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VERSION}.tar.gz
 
