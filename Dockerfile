@@ -38,7 +38,7 @@ RUN wget --tries=10 --continue --no-check-certificate --no-verbose \
     https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.gz \
     https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.gz \
     https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VERSION}.tar.gz \
-    https://www.mpfr.org/mpfr-current/mpfr-${MPFR_VERSION}.tar.gz \
+    https://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz \
     ftp://sourceware.org/pub/newlib/newlib-${NEWLIB_VERSION}.tar.gz \
     https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VERSION}.tar.gz \
     -P ${DOWNLOAD_PATH}
