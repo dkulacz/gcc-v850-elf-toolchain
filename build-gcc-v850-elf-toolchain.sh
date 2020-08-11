@@ -3,6 +3,7 @@
 set -e
 set -o pipefail
 
+sudo apt-get -y update
 sudo apt-get -y install make m4 binutils coreutils gcc g++ texinfo texlive
 
 TOOLCHAIN_NAME="gcc-v850-elf-master"
