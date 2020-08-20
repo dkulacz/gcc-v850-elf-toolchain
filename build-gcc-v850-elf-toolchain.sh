@@ -101,6 +101,7 @@ ${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
 --prefix=${TOOLCHAIN_PATH} \
 --enable-newlib-retargetable-locking \
 --enable-newlib-global-stdio-streams \
+--disable-newlib-supplied-syscalls \
 --disable-nls \
 -v 2>&1 | tee configure.out
 
