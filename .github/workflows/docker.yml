@@ -58,7 +58,7 @@ jobs:
       - name: Extract toolchain
         run: tar -xf /tmp/${TOOLCHAIN_NAME}-x86_64-linux.tar.gz -C /opt
       - name: Install tools
-        run: sudo apt-get update && sudo apt-get -y install make cmake
+        run: sudo apt-get update && sudo apt-get -y install make cmake python-minimal
       - name: Test
         run: |
           export PATH=/opt/gcc-v850-elf-master/bin:${PATH}
