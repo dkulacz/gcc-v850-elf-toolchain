@@ -145,5 +145,5 @@ RUN apt-get -y update && \
         build-essential \
         cmake \
         ninja-build \
-        python2.7 \
+        python2 \
     && rm -rf /var/lib/apt/lists/*
