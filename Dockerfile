@@ -145,5 +145,5 @@ RUN apt-get -y update && \
         build-essential \
         cmake \
         ninja-build \
-        python-minimal \
+        python2-minimal \
     && rm -rf /var/lib/apt/lists/*
