@@ -146,4 +146,4 @@ RUN apt-get -y update && \
         cmake \
         ninja-build \
         python2 \
-    && rm -rf /var/lib/apt/lists/* && \
+    && rm -rf /var/lib/apt/lists/*
