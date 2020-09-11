@@ -30,23 +30,27 @@ ENV BINUTILS_VERSION="2.34" \
     GMP_VERSION="6.2.0" \
     MPC_VERSION="1.1.0" \
     MPFR_VERSION="4.0.2" \
-    NEWLIB_VERSION="3.3.0" \
-    GDB_VERSION="9.2"
+    GDB_VERSION="9.2" \
+    NEWLIB_VERSION="3.3.0"
 
 RUN wget --tries=10 --continue --no-check-certificate --no-verbose \
     https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VERSION}.tar.gz \
     https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.gz \
-    https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.gz \
+    https://ftp.gnu.org/gnu/gmp/gmp-${GMP_VERSION}.tar.bz2 \
     https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VERSION}.tar.gz \
-    https://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz \
-    ftp://sourceware.org/pub/newlib/newlib-${NEWLIB_VERSION}.tar.gz \
+    https://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VERSION}.tar.gz \
     https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VERSION}.tar.gz \
+    ftp://sourceware.org/pub/newlib/newlib-${NEWLIB_VERSION}.tar.gz \
     -P ${DOWNLOAD_PATH}
 
 RUN mkdir -p ${SOURCES_PATH} && \
     for f in ${DOWNLOAD_PATH}/*.tar.gz; \
     do \
         tar xf "$f" -C ${SOURCES_PATH}; \
+    done \
+    for f in ${DOWNLOAD_PATH}/*.tar.bz2; \
+    do \
+        tar xjf "$f" -C ${SOURCES_PATH}; \
     done
 
 RUN cd ${SOURCES_PATH}/gcc-${GCC_VERSION} && \
