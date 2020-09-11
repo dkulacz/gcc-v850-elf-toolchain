@@ -47,7 +47,7 @@ RUN mkdir -p ${SOURCES_PATH} && \
     for f in ${DOWNLOAD_PATH}/*.tar.gz; \
     do \
         tar xf "$f" -C ${SOURCES_PATH}; \
-    done \
+    done; \
     for f in ${DOWNLOAD_PATH}/*.tar.bz2; \
     do \
         tar xjf "$f" -C ${SOURCES_PATH}; \
