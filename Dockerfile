@@ -98,6 +98,9 @@ RUN mkdir -p ${BUILD_PATH}/newlib && \
     ${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
         --target=${TARGET_ARCH} \
         --prefix=${TOOLCHAIN_PATH} \
+        --enable-newlib-retargetable-locking \
+        --enable-newlib-global-stdio-streams \
+        --disable-newlib-supplied-syscalls \
         --disable-nls \
     && \
     make -j$(nproc) all && \
