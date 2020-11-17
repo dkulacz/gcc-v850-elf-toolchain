@@ -101,9 +101,14 @@ make -w install-gcc 2>&1 | tee make.out
 mkdir -p ${BUILD_PATH}/newlib
 cd ${BUILD_PATH}/newlib
 
+export CFLAGS_FOR_TARGET="-Os" # todo: -DPREFER_SIZE_OVER_SPEED=1
+
 ${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
+--enable-newlib-nano-malloc \
+--enable-newlib-nano-formatted-io \
+--enable-lite-exit \
 --disable-nls \
 -v 2>&1 | tee configure.out
 
