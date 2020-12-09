@@ -99,9 +99,7 @@ RUN mkdir -p ${BUILD_PATH}/newlib && \
     ${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
         --target=${TARGET_ARCH} \
         --prefix=${TOOLCHAIN_PATH} \
-        --enable-newlib-nano-malloc \
         --enable-newlib-nano-formatted-io \
-        --enable-lite-exit \
         --disable-nls \
     && \
     make -j$(nproc) all && \
