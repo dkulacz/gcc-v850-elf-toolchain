@@ -95,9 +95,11 @@ RUN mkdir -p ${BUILD_PATH}/gcc && \
 # build newlib
 RUN mkdir -p ${BUILD_PATH}/newlib && \
     cd ${BUILD_PATH}/newlib && \
+    export CFLAGS_FOR_TARGET="-Os" && \
     ${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
         --target=${TARGET_ARCH} \
         --prefix=${TOOLCHAIN_PATH} \
+        --enable-newlib-nano-formatted-io \
         --disable-nls \
     && \
     make -j$(nproc) all && \
