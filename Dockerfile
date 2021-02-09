@@ -153,3 +153,11 @@ RUN apt-get -y update && \
         ninja-build \
         python2 \
     && rm -rf /var/lib/apt/lists/*
+    
+# Protobuf support
+RUN apt-get -y update && \
+    apt-get -y install --no-install-recommends python3-distutils protobuf-compiler && \
+    wget -q https://bootstrap.pypa.io/get-pip.py && \
+    python3 get-pip.py && \
+    pip3 install protobuf && \
+    rm -rf get-pip.py /var/lib/apt/lists/*
