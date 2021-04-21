@@ -30,7 +30,7 @@ ENV BINUTILS_VERSION="2.34" \
     GMP_VERSION="6.2.0" \
     MPC_VERSION="1.1.0" \
     MPFR_VERSION="4.0.2" \
-    NEWLIB_VERSION="3.3.0" \
+    NEWLIB_VERSION="4.1.0" \
     GDB_VERSION="9.2"
 
 RUN wget --tries=10 --continue --no-check-certificate --no-verbose \
