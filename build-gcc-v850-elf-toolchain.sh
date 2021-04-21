@@ -3,6 +3,7 @@
 set -e
 set -o pipefail
 
+sudo apt-get -y update
 sudo apt-get -y install make m4 binutils coreutils gcc g++ texinfo texlive
 
 TOOLCHAIN_NAME="gcc-v850-elf-master"
@@ -36,21 +37,26 @@ GCC_VERSION="10.2.0"
 GMP_VERSION="6.2.0"
 MPC_VERSION="1.1.0"
 MPFR_VERSION="4.0.2"
-NEWLIB_VERSION="3.3.0"
-GDB_VERSION="9.2"
+GDB_VERSION="9.1"
+NEWLIB_VERSION="4.1.0"
 
 # download sources
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VERSION}.tar.gz
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gmp/gmp-${GMP_VERSION}.tar.bz2
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/mpc/mpc-${MPC_VERSION}.tar.gz
-wget -c -P ${DOWNLOAD_PATH} https://www.mpfr.org/mpfr-${MPFR_VERSION}/mpfr-${MPFR_VERSION}.tar.gz
-wget -c -P ${DOWNLOAD_PATH} ftp://sourceware.org/pub/newlib/newlib-${NEWLIB_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VERSION}.tar.gz
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/gdb/gdb-${GDB_VERSION}.tar.gz
+wget -c -P ${DOWNLOAD_PATH} ftp://sourceware.org/pub/newlib/newlib-${NEWLIB_VERSION}.tar.gz
 
 for f in ${DOWNLOAD_PATH}/*.tar.gz
 do
     tar xf "$f" -C ${SOURCES_PATH}
+done
+
+for f in ${DOWNLOAD_PATH}/*.tar.bz2
+do
+    tar xjf "$f" -C ${SOURCES_PATH}
 done
 
 (cd ${SOURCES_PATH}/gcc-${GCC_VERSION}/ && ln -sf ../gmp-${GMP_VERSION} gmp)
@@ -93,9 +99,11 @@ make install-gcc
 mkdir -p ${BUILD_PATH}/newlib
 cd ${BUILD_PATH}/newlib
 
+export CFLAGS_FOR_TARGET="-Os"
 ${SOURCES_PATH}/newlib-${NEWLIB_VERSION}/configure \
 --target=${TARGET_ARCH} \
 --prefix=${TOOLCHAIN_PATH} \
+--enable-newlib-nano-formatted-io \
 --disable-nls
 
 make ${NUMJOBS}

@@ -27,7 +27,7 @@ jobs:
           username: dkulacz
           password: ${{ secrets.dkulacz_dockerhub }}
           repository: ${{ env.DOCKER_IMAGE }}
-          build_args: UBUNTU_VERSION=18.04
+          build_args: UBUNTU_VERSION=20.04
           tag_with_ref: true
           tags: ${{ env.DOCKER_TAG }}
 
@@ -48,7 +48,7 @@ jobs:
   test-archive:
     name: Test archived toolchain
     needs: build-docker
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
