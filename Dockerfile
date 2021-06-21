@@ -26,7 +26,7 @@ ENV DOWNLOAD_PATH="/tmp/${TOOLCHAIN_NAME}/download" \
     BUILD_PATH="/tmp/${TOOLCHAIN_NAME}/build"
 
 ENV BINUTILS_VERSION="2.34" \
-    GCC_VERSION="9.3.0" \
+    GCC_VERSION="9.4.0" \
     GMP_VERSION="6.2.1" \
     MPC_VERSION="1.2.1" \
     MPFR_VERSION="4.1.0" \
