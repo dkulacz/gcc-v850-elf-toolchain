@@ -38,7 +38,7 @@ GMP_VERSION="6.2.1"
 MPC_VERSION="1.2.1"
 MPFR_VERSION="4.1.0"
 GDB_VERSION="9.1"
-NEWLIB_VERSION="3.3.0"
+NEWLIB_VERSION="4.1.0"
 
 # download sources
 wget -c -P ${DOWNLOAD_PATH} https://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VERSION}.tar.gz
