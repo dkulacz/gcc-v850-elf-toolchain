@@ -32,7 +32,7 @@ rm -rf ${SOURCES_PATH:?}/*
 rm -rf ${BUILD_PATH:?}/*
 
 # software versions
-BINUTILS_VERSION="2.34"
+BINUTILS_VERSION="2.36.1"
 GCC_VERSION="9.4.0"
 GMP_VERSION="6.2.1"
 MPC_VERSION="1.2.1"
