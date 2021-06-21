@@ -27,7 +27,7 @@ ENV DOWNLOAD_PATH="/tmp/${TOOLCHAIN_NAME}/download" \
 
 ENV BINUTILS_VERSION="2.34" \
     GCC_VERSION="9.3.0" \
-    GMP_VERSION="6.2.0" \
+    GMP_VERSION="6.2.1" \
     MPC_VERSION="1.1.0" \
     MPFR_VERSION="4.0.2" \
     GDB_VERSION="9.2" \
